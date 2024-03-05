@@ -10,8 +10,8 @@
 
 /******* Ports on Esp32********/
 
-const int BUTTON = 16;
-const int LED_GREEN = 4;
+const int BUTTON = 26;
+const int LED_GREEN = 25;
 const int TEMP_SENSOR = 17; 
 
 

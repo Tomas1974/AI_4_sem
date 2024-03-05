@@ -12,9 +12,9 @@ import {chatbox} from "ionicons/icons";
 
       <ion-col>
         <ion-row>
-          <img style=" width: 20%; height: auto;" src="../assets/smiley.png">
+          <img style=" width: 5%; height: auto;" src="../assets/Temp_image.jpg">
 
-          <H1 style="margin-left: 20px;">Smiley</H1>
+          <H1 style="margin-left: 20px;">AI temperature</H1>
         </ion-row>
       </ion-col>
 
@@ -27,59 +27,39 @@ import {chatbox} from "ionicons/icons";
           <ion-col size="7">
 
             <ion-card >
-              <ion-card-title>Antal af forskellige farver</ion-card-title>
+              <ion-card-title>Temperatures</ion-card-title>
 
-              <ngx-charts-bar-vertical
+
+
+
+              <ngx-charts-line-chart
                 [view]=[1000,400]
                 [scheme]="colorScheme"
-                [results]="this.dataService.farve_count"
-                [gradient]="gradient"
-                [xAxis]="showXAxis"
-                [yAxis]="showYAxis"
                 [legend]="showLegend"
-                [legendPosition]="legendPosition"
                 [showXAxisLabel]="showXAxisLabel"
                 [showYAxisLabel]="showYAxisLabel"
+                [xAxis]="xAxis"
+                [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel"
                 [yAxisLabel]="yAxisLabel"
-                (select)="onSelect($event)">
-              </ngx-charts-bar-vertical>
+                [timeline]="timeline"
+                [results]="this.dataService.temperature"
+                (select)="onSelect($event)"
+                (activate)="onActivate($event)"
+                (deactivate)="onDeactivate($event)"
+              >
+              </ngx-charts-line-chart>
 
 
             </ion-card>
 
-
-
           </ion-col>
-          <ion-card >
-
-            <ion-card-title>Procent fordeling</ion-card-title>
-          <ngx-charts-pie-chart
-            [view]=[1000,400]
-            [scheme]="colorScheme"
-            [results]="this.dataService.farve_procent"
-            [gradient]="gradient"
-            [legend]="showLegend"
-            [legendPosition]="legendPosition"
-            [labels]="showLabels"
-            [doughnut]="isDoughnut"
-            (select)="onSelect($event)"
-            (activate)="onActivate($event)"
-            (deactivate)="onDeactivate($event)"
-          >
-          </ngx-charts-pie-chart>
-          </ion-card>
 
           <ion-col size="6">
             <ion-card >
+
             <ion-row>
-              <p>Antal Rød {{ dataService.farve_count[0].value }}</p>
-            </ion-row>
-            <ion-row>
-              <p>Antal Gul {{ dataService.farve_count[1].value }}</p>
-            </ion-row>
-            <ion-row>
-              <p>Antal Grøn {{ dataService.farve_count[2].value }}</p>
+              <p>Antal Grøn {{ dataService.temperature }}</p>
             </ion-row>
             <ion-button (click)="nulstil()">Nulstil</ion-button>
             </ion-card>
@@ -94,16 +74,16 @@ export class AppComponent {
 
 
   // options
-  showXAxis = true;
-  showYAxis = true;
-  gradient = false;
+
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Farve';
+  xAxisLabel = 'Sec';
+  yAxisLabel = 'Temperatures';
   showYAxisLabel = true;
-  yAxisLabel = 'Antal';
-  showLabels: boolean = true;
-  isDoughnut: boolean = false;
+  xAxis: boolean = true;
+  yAxis: boolean = true;
+  timeline: boolean = true;
+
 
 
   colorScheme: any  = {
@@ -133,7 +113,7 @@ export class AppComponent {
 
 
   nulstil() {
-    this.dataService.nulstil();
+   // this.dataService.nulstil();
   }
 
   protected readonly chatbox = chatbox;
