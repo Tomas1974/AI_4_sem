@@ -1,4 +1,4 @@
 **/bin/
 **/obj/
 .idea
-Arduino/password.txt
+Arduino/MQTT_1_/password.H
