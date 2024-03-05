@@ -8,11 +8,6 @@ export class BaseDto<T> {
 }
 
 
-export class ClientWantsToGetAllFarverDto extends BaseDto<ClientWantsToGetAllFarverDto> {
-  farver?: string[];
-}
-
-
 
 export class ServerSendsIOTDataToClientsDto extends BaseDto<ServerSendsIOTDataToClientsDto> {
   data?: string;

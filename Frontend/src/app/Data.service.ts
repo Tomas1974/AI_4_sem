@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import {BaseDto, ClientWantsToGetAllFarverDto, ServerSendsIOTDataToClientsDto} from "./BaseDto";
-import {temperaturModel} from "./farveModel";
+import {BaseDto,  ServerSendsIOTDataToClientsDto} from "./BaseDto";
+import {temperaturModel} from "./tempModel";
+
 
 
 @Injectable({
@@ -9,27 +10,7 @@ import {temperaturModel} from "./farveModel";
 export class DataService {
 
   secCounter:number=0;
-  temperature: any[]=[
-    {
-      "name": "Temp1",
-      "series": [
-        {
-          "name": "1",
-          "value": 21
-        },
-        {
-          "name": "2",
-          "value": 22
-        },
-        {
-          "name": "3",
-          "value": 23
-        }
-      ]
-    }];
-
-
-
+  temperatureData: temperaturModel[]=[];
 
   ws: WebSocket = new WebSocket("ws://localhost:8181")
 
@@ -48,10 +29,17 @@ export class DataService {
 
       this.secCounter++;
 
+      let temp: temperaturModel;
+      temp = {
+        name: 'Sensor1',
+        series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
+      }
 
 
 
+      this.temperatureData.push(temp);
 
+      this.temperatureData=[...this.temperatureData];
 
     }
 
@@ -82,3 +70,4 @@ export class DataService {
   //   }
 
 }
+

@@ -118,16 +118,16 @@ void loop() {
   {
   
     
-      if (millis() > 1000) 
+     // if (millis() > 1000) 
       {
 
       DS18B20.requestTemperatures();       // send the command to get temperatures
       tempC = DS18B20.getTempCByIndex(0);  // read temperature in °C
       char message[20];
-      sprintf(message, "Temperature: %.1f", tempC);
+      sprintf(message, "%.1f", tempC);
       Serial.println(tempC);
       client.publish("esp/temp", message);
-
+      delay(1000);
    
       }
 

@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {DataService} from "./Data.service";
 import {LegendPosition} from "@swimlane/ngx-charts";
-import {farveModel} from "./farveModel";
+
 import {chatbox} from "ionicons/icons";
 
 @Component({
@@ -43,7 +43,7 @@ import {chatbox} from "ionicons/icons";
                 [xAxisLabel]="xAxisLabel"
                 [yAxisLabel]="yAxisLabel"
                 [timeline]="timeline"
-                [results]="this.dataService.temperature"
+                [results]="this.dataService.temperatureData"
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)"
@@ -59,7 +59,7 @@ import {chatbox} from "ionicons/icons";
             <ion-card >
 
             <ion-row>
-              <p>Antal Grøn {{ dataService.temperature }}</p>
+              <p>Antal Grøn {{ dataService.temperatureData.length }}</p>
             </ion-row>
             <ion-button (click)="nulstil()">Nulstil</ion-button>
             </ion-card>

@@ -1,7 +1,6 @@
 export interface temperaturModel
 {
   name: string;
-  value: number;
-
+  series: { name: string, value: number }[];
 }
 

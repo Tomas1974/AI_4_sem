@@ -30,14 +30,6 @@ server.Start(ws =>
     {
 
 
-        //Her sendes tiltagere til frontenden ved start
-        var echo = new TilføjFarve()
-        {
-            farver = dataservice.sendList()
-        };
-        var messageToClient = JsonSerializer.Serialize(echo);
-        ws.Send(messageToClient);
-
     
         CurrentConnections.Connections.Add(ws);
     };
