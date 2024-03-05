@@ -3,7 +3,6 @@
 
 /******* WIFI ********/
 //const char* ssid = "POCO X3 Pro";
-const char* ssid = "Tomas";
 const char* password = "Tomas1974";
 
 
