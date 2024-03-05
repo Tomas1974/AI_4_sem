@@ -1,0 +1,8 @@
+{
+  "name": "arrayOperationer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+
+}
