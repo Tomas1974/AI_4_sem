@@ -3,6 +3,7 @@ import {DataService} from "./Data.service";
 import {LegendPosition} from "@swimlane/ngx-charts";
 
 import {chatbox} from "ionicons/icons";
+import {DataMockService} from "./DataMock.service";
 
 @Component({
   selector: 'app-root',
@@ -113,7 +114,7 @@ export class AppComponent {
 
 
   nulstil() {
-   // this.dataService.nulstil();
+    this.dataService.nulstil();
   }
 
   protected readonly chatbox = chatbox;
