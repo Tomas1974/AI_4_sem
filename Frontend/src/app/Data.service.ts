@@ -13,7 +13,7 @@ export class DataService {
   temperatureData: temperaturModel[]=[];
 
   ws: WebSocket = new WebSocket("ws://localhost:8181")
-
+  graphName: string="";
 
   constructor() {
     this.ws.onmessage = message => {
@@ -28,7 +28,7 @@ export class DataService {
     if (dto.data != null) {
 
       this.secCounter++;
-      const existingSeries = this.temperatureData.find(series => series.name === 'Serie1');
+      const existingSeries = this.temperatureData.find(series => series.name === this.graphName);
 
       if (existingSeries) {
         existingSeries.series.push({
@@ -37,7 +37,7 @@ export class DataService {
         });
       } else {
         const newSeries = {
-          name: 'Serie1',
+          name: this.graphName,
           series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
         };
         this.temperatureData.push(newSeries); // Push the new series to temperatureData

@@ -1,9 +1,6 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import {DataService} from "./Data.service";
 import {LegendPosition} from "@swimlane/ngx-charts";
-
-import {chatbox} from "ionicons/icons";
-import {DataMockService} from "./DataMock.service";
 import {UtilitiesService} from "./utilities.service";
 
 @Component({
@@ -31,12 +28,24 @@ import {UtilitiesService} from "./utilities.service";
             <ion-card >
             <ion-row>
               <ion-col>
-              <ion-button (click)="nameGraph()">Name</ion-button>
-                <ion-button (click)="start_stop()">Start/Stop</ion-button>
-              <ion-button (click)="saveGraph()">Save</ion-button>
+              <ion-button  (click)="nameGraph()">Name</ion-button>
+
+                <ion-button style=".grey {
+                  --ion-color-base: grey !important;
+                    --ion-color-base-rgb: 128,128,128 !important;
+}
+" [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="start_stop()">Start/Stop</ion-button>
+
+
+                <ion-button style=".grey {
+                  --ion-color-base: grey !important;
+                    --ion-color-base-rgb: 128,128,128 !important;
+}
+" [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="saveGraph()">Save</ion-button>
+
               </ion-col>
-                <ion-col>
-                  <h1>{{graphName}}</h1>
+                <ion-col >
+                  <h1>{{this.dataService.graphName}}</h1>
 
               </ion-col>
             </ion-row>
@@ -77,7 +86,15 @@ import {UtilitiesService} from "./utilities.service";
             <ion-row>
               <p>Antal målinger {{ dataService.temperatureData.length }}</p>
             </ion-row>
-            <ion-button (click)="nulstil()">Nulstil</ion-button>
+
+
+              <ion-button style=".grey {
+                  --ion-color-base: grey !important;
+                    --ion-color-base-rgb: 128,128,128 !important;
+}
+" [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="nulstil()">Nulstil</ion-button>
+
+
             </ion-card>
           </ion-col>
         </ion-row>
@@ -108,7 +125,7 @@ export class AppComponent {
 
   legendPosition=LegendPosition.Below; //placerer landene under grafen
 
-  graphName: string="";
+
 
 
   constructor(public dataService: DataService, public utilitiesService: UtilitiesService ) {
@@ -137,13 +154,13 @@ export class AppComponent {
 
     if (confirm) {
       this.dataService.nulstil();
-      this.graphName="";
+      this.dataService.graphName="";
     }
   }
 
 
   async nameGraph() {
-    this.graphName=await this.utilitiesService.insertLine("Save Name","","");
+    this.dataService.graphName=await this.utilitiesService.insertLine("Save Name","","");
   }
 
    saveGraph() {
