@@ -28,18 +28,23 @@ export class DataService {
     if (dto.data != null) {
 
       this.secCounter++;
+      const existingSeries = this.temperatureData.find(series => series.name === 'Serie1');
 
-      let temp: temperaturModel;
-      temp = {
-        name: 'Sensor1',
-        series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
+      if (existingSeries) {
+        existingSeries.series.push({
+          name: this.secCounter.toString(),
+          value: parseFloat(dto.data)
+        });
+      } else {
+        const newSeries = {
+          name: 'Serie1',
+          series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
+        };
+        this.temperatureData.push(newSeries); // Push the new series to temperatureData
       }
 
-
-
-      this.temperatureData.push(temp);
-
-      this.temperatureData=[...this.temperatureData];
+      // Ensure this line is inside the if/else block to apply changes
+      this.temperatureData = [...this.temperatureData];
 
     }
 
@@ -47,10 +52,11 @@ export class DataService {
 
 
 
-    nulstil()
+
+  nulstil()
     {
 
-      this.temperatureData=[...this.temperatureData];
+      this.temperatureData=[];
 
     }
 

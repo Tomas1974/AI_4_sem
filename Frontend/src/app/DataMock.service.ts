@@ -9,11 +9,12 @@ import {temperaturModel} from "./tempModel";
 })
 export class DataMockService {
 
-  secCounter:number=0;
+  secCounter:number=3;
+
   temperatureData: temperaturModel[]=[
     {
-      "name": "Germany",
-      "series": [
+      name: "Serie1",
+      series: [
         {
           "name": "1",
           "value": 20
@@ -27,26 +28,7 @@ export class DataMockService {
           "value": 23
         }
       ]
-    },
-
-
-    {
-      "name": "France",
-      "series": [
-        {
-          "name": "1",
-          "value": 32
-        },
-        {
-          "name": "2",
-          "value": 33
-        },
-        {
-          "name": "3",
-          "value": 34
-        }
-      ]
-    },
+    }
 
   ];
 
@@ -67,18 +49,25 @@ export class DataMockService {
     if (dto.data != null) {
 
       this.secCounter++;
+        console.log(dto.data);
+      const existingSeries = this.temperatureData.find(series => series.name === 'Serie1');
 
-      let temp: temperaturModel;
-      temp = {
-        name: 'Sensor1',
-        series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
+      if (existingSeries) {
+        existingSeries.series.push({
+          name: this.secCounter.toString(),
+          value: parseFloat(dto.data)
+        });
+      } else {
+        // If for some reason the series does not exist, create it and push to temperatureData
+        const newSeries = {
+          name: 'Serie1',
+          series: [{name: this.secCounter.toString(), value: parseFloat(dto.data)}]
+        };
+        this.temperatureData.push(newSeries); // Push the new series to temperatureData
       }
 
-
-
-      this.temperatureData.push(temp);
-
-      this.temperatureData=[...this.temperatureData];
+      // Ensure this line is inside the if/else block to apply changes
+      this.temperatureData = [...this.temperatureData];
 
     }
 
@@ -86,27 +75,12 @@ export class DataMockService {
 
 
 
+    nulstil()
+    {
 
+      this.temperatureData=[...this.temperatureData];
 
-
-
-
-
-
-  //   nulstil()
-  //   {
-  //     this.farve_count[0].value=0;
-  //     this.farve_count[1].value=0;
-  //     this.farve_count[2].value=0;
-  //     this.farve_count=[...this.farve_count];
-  //     this.farve_procent = [
-  //
-  //       { name: "Red", value: 0 },
-  //       { name: "Yellow", value: 0},
-  //       { name: "Green", value: 0 }
-  //     ];
-  //     this.farve_procent=[...this.farve_procent];
-  //   }
+    }
 
 }
 

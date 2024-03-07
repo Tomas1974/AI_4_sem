@@ -4,6 +4,7 @@ import {LegendPosition} from "@swimlane/ngx-charts";
 
 import {chatbox} from "ionicons/icons";
 import {DataMockService} from "./DataMock.service";
+import {UtilitiesService} from "./utilities.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import {DataMockService} from "./DataMock.service";
 
       <ion-col>
         <ion-row>
-          <img style=" width: 5%; height: auto;" src="../assets/Temp_image.jpg">
+          <img style=" width: 2%; height: auto;" src="../assets/Temp_image.jpg">
 
           <H1 style="margin-left: 20px;">AI temperature</H1>
         </ion-row>
@@ -28,7 +29,19 @@ import {DataMockService} from "./DataMock.service";
           <ion-col size="7">
 
             <ion-card >
-              <ion-card-title>Temperatures</ion-card-title>
+            <ion-row>
+              <ion-col>
+              <ion-button (click)="nameGraph()">Name</ion-button>
+                <ion-button (click)="start_stop()">Start/Stop</ion-button>
+              <ion-button (click)="saveGraph()">Save</ion-button>
+              </ion-col>
+                <ion-col>
+                  <h1>{{graphName}}</h1>
+
+              </ion-col>
+            </ion-row>
+
+
 
 
 
@@ -39,6 +52,7 @@ import {DataMockService} from "./DataMock.service";
                 [legend]="showLegend"
                 [showXAxisLabel]="showXAxisLabel"
                 [showYAxisLabel]="showYAxisLabel"
+                [animations]="true"
                 [xAxis]="xAxis"
                 [yAxis]="yAxis"
                 [xAxisLabel]="xAxisLabel"
@@ -48,6 +62,7 @@ import {DataMockService} from "./DataMock.service";
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)"
+
               >
               </ngx-charts-line-chart>
 
@@ -60,7 +75,7 @@ import {DataMockService} from "./DataMock.service";
             <ion-card >
 
             <ion-row>
-              <p>Antal Grøn {{ dataService.temperatureData.length }}</p>
+              <p>Antal målinger {{ dataService.temperatureData.length }}</p>
             </ion-row>
             <ion-button (click)="nulstil()">Nulstil</ion-button>
             </ion-card>
@@ -93,7 +108,10 @@ export class AppComponent {
 
   legendPosition=LegendPosition.Below; //placerer landene under grafen
 
-  constructor(public dataService: DataService, private cdr: ChangeDetectorRef) {
+  graphName: string="";
+
+
+  constructor(public dataService: DataService, public utilitiesService: UtilitiesService ) {
 
     }
 
@@ -113,9 +131,26 @@ export class AppComponent {
 
 
 
-  nulstil() {
-    this.dataService.nulstil();
+  async nulstil() {
+
+    let confirm=await this.utilitiesService.confirmDelete()
+
+    if (confirm) {
+      this.dataService.nulstil();
+      this.graphName="";
+    }
   }
 
-  protected readonly chatbox = chatbox;
+
+  async nameGraph() {
+    this.graphName=await this.utilitiesService.insertLine("Save Name","","");
+  }
+
+   saveGraph() {
+
+  }
+
+  start_stop() {
+
+  }
 }
