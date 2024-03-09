@@ -168,6 +168,7 @@ export class AppComponent {
   }
 
   start_stop() {
+    this.dataService.startStop();
 
   }
 }

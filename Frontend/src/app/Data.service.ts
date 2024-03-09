@@ -51,6 +51,18 @@ export class DataService {
   }
 
 
+  startStop()
+  {
+    var object = {
+      eventType: "StartStop",
+      start_stop: "Start"
+
+    }
+    this.ws.send(JSON.stringify(object));
+
+
+  }
+
 
 
   nulstil()

@@ -5,7 +5,7 @@ using System.Xml;
 using Fleck;
 using lib;
 using Service1.Service;
-using Websocket_fødselsdag_2;
+using Websocket;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,15 +48,9 @@ server.Start(ws =>
     };
 });
 
-new MQTT(dataservice).Startup();
+new MQTT().Startup();
 
 Console.ReadLine();
 
 
 
-
-
-public class TilføjFarve : BaseDto
-{
-    public List<string> farver { get; set; }
-}

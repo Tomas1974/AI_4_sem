@@ -1,6 +1,6 @@
 ﻿using Fleck;
 
-namespace Websocket_fødselsdag_2;
+namespace Websocket;
 
 public static class CurrentConnections
 {
