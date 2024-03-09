@@ -30,7 +30,7 @@ export class DataService {
       this.secCounter++;
       const existingSeries = this.temperatureData.find(series => series.name === this.graphName);
 
-      if (existingSeries) {
+        if (existingSeries) {
         existingSeries.series.push({
           name: this.secCounter.toString(),
           value: parseFloat(dto.data)

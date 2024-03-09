@@ -24,26 +24,14 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
+    
   
-
-  char message[length + 1];
-  for (int i = 0; i < length; i++) {
-    message[i] = (char)payload[i];
-  }
-  message[length] = '\0';  // Null terminate the string
-   
-  //Serial.println(message);
-
 if (start)
   start=false;
   else
   start=true;
 
-  
-
  
-  if (strcmp(topic, "esp/return") == 0) 
-     satisfaction = !satisfaction;
  
   
 }
@@ -85,14 +73,12 @@ void setup() {
 void loop() {
   client.loop();
 
- // buttonState = digitalRead(BUTTON);
-  //if (buttonState != lastButtonState) {  // Button state has changed
-//    if (buttonState == HIGH) {  // Button is pressed
   
   
   if (start)
   {
-     digitalWrite(LED_GREEN, HIGH);  // Update the LED
+    
+    digitalWrite(LED_GREEN, HIGH);  // Update the LED
     DS18B20.requestTemperatures();  // Send the command to get temperatures
     tempC = DS18B20.getTempCByIndex(0);  // Read temperature in °C
     char message[20];
