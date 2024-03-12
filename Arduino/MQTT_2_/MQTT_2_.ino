@@ -24,22 +24,16 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 void callback(char* topic, byte* payload, unsigned int length) {
-    
   
 if (start)
   start=false;
   else
   start=true;
-
- 
- 
   
 }
 
-void setup() {
-  Serial.begin(9600);
-
-  // WIFI connection
+void wifiConnection()
+{
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -47,8 +41,12 @@ void setup() {
   }
   Serial.println("Connected to the WiFi network");
 
-  // MQTT connection
-  client.setServer(mqttServer, mqttPort);
+}
+
+
+void mqttConnection()
+{
+   client.setServer(mqttServer, mqttPort);
   while (!client.connected()) {
     Serial.println("Connecting to MQTT...");
     if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
@@ -59,20 +57,28 @@ void setup() {
       Serial.print("failed with state ");
       Serial.print(client.state());
       delay(2000);
+      
     }
-  }
+}
+client.publish("esp/test", "Hello from ESP32");
+}
 
-  client.publish("esp/test", "Hello from ESP32");
 
-  // Define pinModes
+void setup() {
+  Serial.begin(9600);
+
+  wifiConnection();
+  mqttConnection();
+ 
+
   pinMode(BUTTON, INPUT_PULLUP);
   pinMode(LED_GREEN, OUTPUT);
   DS18B20.begin();
 }
 
+
 void loop() {
   client.loop();
-
   
   
   if (start)

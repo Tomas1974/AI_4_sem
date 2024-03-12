@@ -43,6 +43,12 @@ import {UtilitiesService} from "./utilities.service";
 }
 " [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="saveGraph()">Save</ion-button>
 
+                <ion-button style=".grey {
+                  --ion-color-base: grey !important;
+                    --ion-color-base-rgb: 128,128,128 !important;
+}
+                " [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="nulstil()">Nulstil</ion-button>
+
               </ion-col>
                 <ion-col >
                   <h1>{{this.dataService.graphName}}</h1>
@@ -88,11 +94,7 @@ import {UtilitiesService} from "./utilities.service";
             </ion-row>
 
 
-              <ion-button style=".grey {
-                  --ion-color-base: grey !important;
-                    --ion-color-base-rgb: 128,128,128 !important;
-}
-" [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="nulstil()">Nulstil</ion-button>
+
 
 
             </ion-card>
