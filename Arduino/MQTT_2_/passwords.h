@@ -3,9 +3,11 @@
 
 /******* WIFI ********/
 //const char* ssid = "POCO X3 Pro";
-const char* ssid = "Tomas";
-const char* password = "Tomas1974";
+const char* hjemme_ssid = "Tomas";
+const char* hjemme_password = "Tomas1974";
 
+const char* skole_ssid = "POCO X3 Pro";
+const char* skole_password = "Tomas1974";
 
 
 /******* Flespi ********/
