@@ -24,13 +24,12 @@ int buttonState_Menu = 0;
 int buttonState_Choise = 0;
 int lastButtonState_Menu = 0;
 int lastButtonState_Choise = 0;
-unsigned long lastUpdateTime = 0; 
 int programNumber=0;
 int programChoise=0;
-bool timeOut=false;
 bool wifiON=false;
+
 String ssid1;
-long currentTime;
+
 
 
 //Variables screen
@@ -39,6 +38,9 @@ int lcdRows = 2;
 
 
 bool mqttConnect=false;
+
+long lastUpdateTime;
+
 
 //Hardware and connections varibles
 OneWire oneWire(TEMP_SENSOR);
@@ -69,24 +71,19 @@ void wifiConnection(String ssid, String password)
   {
     counter++;
     delay(500);
-    Serial.println(String(counter)+" "+ssid);
+    
   }
   
 if (counter==10)
-{
-    
-     Serial.println("Ingen forbindelse");
-    ssid1="";
-   
-}
+   Serial.println("Ingen forbindelse");
+       
+
 else
 {
   Serial.println("Connected to the WiFi network");
     wifiON=true;
   
 }
-
-
 
 }
 
@@ -137,8 +134,7 @@ void button_Menu()
       
         programNumber++;
         
-        timeOut=false;
-             
+                     
       if (programNumber==3)
       programNumber=1;
 
@@ -158,10 +154,9 @@ void valg()
 {
   
   {
-      
+     
       lcd.clear();
-
-      Serial.println(ssid1);
+   Serial.println(ssid1);
 
       if (programNumber==1 )
       {
@@ -188,13 +183,7 @@ void valg()
         lcd.print("------OFF-------");
       }
       
-
-      if (timeOut && wifiON)
-      {
-          lcd.setCursor(0,1);
-          lcd.print("-------ON-------");
-          
-      }
+      
   }
 
 }
@@ -228,24 +217,31 @@ void button_Choise()
 }
 
 
+    void wifiMenuSystem()
+    {
+      button_Menu();
+      button_Choise();
+    }
+
 
 
 void loop() {
   
   client.loop();
   
-   currentTime = millis();
- 
+   long currentTime = millis();
+  
 
    
   if (start)
   {
 
-  unsigned long timeWent=currentTime-lastUpdateTime;
+    long timeWent=currentTime-lastUpdateTime;
+
   
   if (timeWent>=1000)
   {
-  
+      
     DS18B20.requestTemperatures();  // Send the command to get temperatures
     tempC = DS18B20.getTempCByIndex(0);  // Read temperature in °C
     char message[20];
@@ -258,16 +254,19 @@ void loop() {
     digitalWrite(LED_GREEN, HIGH);  // Update the LED
     
     client.publish("esp/temp", message);
+    
+    lastUpdateTime=currentTime;
     }
-     
+       delay(50);
+      
+
     }
     else
  {
 
   digitalWrite(LED_GREEN, LOW);  // Update the LED
   
-  button_Menu();
-  button_Choise();
+    wifiMenuSystem();
 
 
     if (wifiON==false)
@@ -279,9 +278,6 @@ void loop() {
        mqttConnect==true; 
     }
      
-
-  
-  
   
   delay(50);
 
