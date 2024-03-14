@@ -26,12 +26,11 @@ int lastButtonState_Menu = 0;
 int lastButtonState_Choise = 0;
 unsigned long lastUpdateTime = 0; 
 int programNumber=0;
-int gemtProgramNumber=0;
 int programChoise=0;
 bool timeOut=false;
 bool wifiON=false;
 String ssid1;
-
+long currentTime;
 
 
 //Variables screen
@@ -39,7 +38,7 @@ int lcdColumns = 16;
 int lcdRows = 2;
 
 
-
+bool mqttConnect=false;
 
 //Hardware and connections varibles
 OneWire oneWire(TEMP_SENSOR);
@@ -77,23 +76,17 @@ if (counter==10)
 {
     
      Serial.println("Ingen forbindelse");
-   
+    ssid1="";
    
 }
 else
 {
   Serial.println("Connected to the WiFi network");
+    wifiON=true;
   
-  wifiON=true;
-
-        lcd.setCursor(0,1);
-        lcd.print("-------ON-------");
- 
-  mqttConnection();
-
 }
 
-programNumber=gemtProgramNumber; //Her sikres at man kan komme ind i valg menuen igen
+
 
 }
 
@@ -133,7 +126,7 @@ void setup() {
 
 
 
-void button_Menu(long currentTime)
+void button_Menu()
 {
     buttonState_Menu = digitalRead(BUTTON_Menu);
     
@@ -145,12 +138,11 @@ void button_Menu(long currentTime)
         programNumber++;
         
         timeOut=false;
-        WiFi.disconnect();
-     
+             
       if (programNumber==3)
       programNumber=1;
 
-          valg(currentTime);  
+          valg();  
     }
 
     delay(50); // Debounce delay
@@ -162,9 +154,9 @@ void button_Menu(long currentTime)
 }
 
 
-void valg(long currentTime)
+void valg()
 {
-  //if (programNumber!=gemtProgramNumber) //For at skærmen ikke skal flimre ændres teksten så lidt så muligt.
+  
   {
       
       lcd.clear();
@@ -190,7 +182,7 @@ void valg(long currentTime)
       {
         lcd.print("   Skole WIFI");
         lcd.setCursor(0,1);
-        if ( wifiON&& ssid1==skole_ssid)
+        if ( wifiON && ssid1==skole_ssid)
         lcd.print("-------ON-------");
         else
         lcd.print("------OFF-------");
@@ -203,10 +195,7 @@ void valg(long currentTime)
           lcd.print("-------ON-------");
           
       }
-
   }
-   gemtProgramNumber=programNumber; 
-   lastUpdateTime = currentTime;
 
 }
 
@@ -230,6 +219,7 @@ void button_Choise()
       else
       wifiConnection(skole_ssid, skole_password);
       
+      valg();
             
     }
      
@@ -240,14 +230,11 @@ void button_Choise()
 
 
 
-
-
-
 void loop() {
   
   client.loop();
   
-  unsigned long currentTime = millis();
+   currentTime = millis();
  
 
    
@@ -279,17 +266,21 @@ void loop() {
 
   digitalWrite(LED_GREEN, LOW);  // Update the LED
   
-  button_Menu(currentTime);
+  button_Menu();
   button_Choise();
 
 
+    if (wifiON==false)
+      mqttConnect==false; 
 
-  unsigned long timeWent=currentTime-lastUpdateTime;
-  if (timeWent>=5000)
-  {
-     timeOut=true;
-     valg(currentTime);
-  }
+    if (wifiON && mqttConnect==false)
+    {
+       mqttConnection();
+       mqttConnect==true; 
+    }
+     
+
+  
   
   
   delay(50);
