@@ -4,14 +4,27 @@
 #include <DallasTemperature.h>
 #include "passwords.h"  // Your WiFi and MQTT credentials
 #include <LiquidCrystal_I2C.h>
+#include "WifiMenu.h"
+
+
 
 
 // Ports on ESP32
-const int BUTTON = 26;
+
 const int LED_GREEN = 25;
 const int TEMP_SENSOR = 17;
 const int BUTTON_Menu = 16;
 const int BUTTON_Choise = 4;
+
+
+//Variables screen
+int lcdColumns = 16;
+int lcdRows = 2;
+
+
+WifiMenu wifiMenu(0x27, lcdColumns, lcdRows, BUTTON_Menu, BUTTON_Choise);
+
+
 
 // Variables to temp censor
 float tempC; // temperature in Celsius
@@ -32,9 +45,7 @@ String ssid1;
 
 
 
-//Variables screen
-int lcdColumns = 16;
-int lcdRows = 2;
+
 
 
 bool mqttConnect=false;
@@ -111,13 +122,15 @@ client.publish("esp/test", "Hello from ESP32");
 void setup() {
   Serial.begin(9600);
 
-  lcd.init();
-  lcd.backlight();
+  wifiMenu.initialize();
 
-  pinMode(BUTTON, INPUT_PULLUP);
+  
+  
+  //pinMode(BUTTON_Menu, INPUT_PULLUP);
+  //pinMode(BUTTON_Choise, INPUT_PULLUP);
+  
+  
   pinMode(LED_GREEN, OUTPUT);
-  pinMode(BUTTON_Menu, INPUT_PULLUP);
-  pinMode(BUTTON_Choise, INPUT_PULLUP);
   DS18B20.begin();
 }
 
