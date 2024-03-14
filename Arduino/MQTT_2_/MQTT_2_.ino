@@ -26,12 +26,17 @@ int lastButtonState_Menu = 0;
 int lastButtonState_Choise = 0;
 unsigned long lastUpdateTime = 0; 
 int programNumber=0;
+int gemtProgramNumber=0;
 int programChoise=0;
+bool timeOut=false;
+bool wifiON=false;
 
 
 //Variables screen
 int lcdColumns = 16;
 int lcdRows = 2;
+
+
 
 
 //Hardware and connections varibles
@@ -55,12 +60,40 @@ if (start)
 
 void wifiConnection(String ssid, String password)
 {
+  int counter=0;
+    
+
   WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && counter<10) 
+  {
+    counter++;
     delay(500);
-    Serial.println("Connecting to "+ssid+" WIFI");
+    Serial.println(String(counter)+" "+ssid);
   }
+  
+if (counter==10)
+{
+    
+   lcd.clear();
+   lcd.print("   Ingen WIFI");
+   Serial.println("Ingen forbindelse");
+   
+   
+}
+else
+{
   Serial.println("Connected to the WiFi network");
+  
+  wifiON=true;
+
+        lcd.setCursor(0,1);
+        lcd.print("-------ON-------");
+ 
+  mqttConnection();
+
+}
+
+programNumber=gemtProgramNumber; //Her sikres at man kan komme ind i valg menuen igen
 
 }
 
@@ -88,7 +121,6 @@ client.publish("esp/test", "Hello from ESP32");
 void setup() {
   Serial.begin(9600);
 
-  
   lcd.init();
   lcd.backlight();
 
@@ -112,19 +144,44 @@ void button_Menu(long currentTime)
       
         programNumber++;
         lastUpdateTime = currentTime;
+        timeOut=false;
+        WiFi.disconnect();
      
       if (programNumber==3)
       programNumber=1;
-      
-      
+            
     }
 
     delay(50); // Debounce delay
   }
 
   lastButtonState_Menu = buttonState_Menu;
+  valg();
 
-buttonState_Choise = digitalRead(BUTTON_Choise);
+}
+
+
+void valg()
+{
+  if (programNumber!=gemtProgramNumber) //For at skærmen ikke skal flimre ændres teksten så lidt så muligt.
+  {
+      
+      lcd.clear();
+
+      if (programNumber==1 )
+      lcd.print("  Hjemme WIFI");
+      else
+      lcd.print("   Skole WIFI");
+
+      if (timeOut && wifiON)
+      {
+          lcd.setCursor(0,1);
+          lcd.print("-------ON-------");
+          
+      }
+
+  }
+   gemtProgramNumber=programNumber; 
 
 }
 
@@ -132,43 +189,40 @@ buttonState_Choise = digitalRead(BUTTON_Choise);
 
 void button_Choise()
 {
-if (buttonState_Choise != lastButtonState_Choise) {
-    
+ 
+ buttonState_Choise = digitalRead(BUTTON_Choise);
 
-      
-    if (buttonState_Choise == HIGH) {
-      
-       programChoise=programNumber;
-        
-    }
+    if (buttonState_Choise != lastButtonState_Choise) 
+    if (buttonState_Choise == HIGH) 
+    {
 
-    switch(programChoise)
-      {
+    programChoise=programNumber;      
+    wifiON=false;
       
-      case 1:
+
+      if (programChoise==1)
       wifiConnection(hjemme_ssid, hjemme_password);
-      mqttConnection();
-      break;
-
-      case 2:
+      else
       wifiConnection(skole_ssid, skole_password);
-      mqttConnection();
-      break;
-
       
-      }
+            
+    }
+     
+    lastButtonState_Choise = buttonState_Choise;
 
-  }
-
-  lastButtonState_Choise = buttonState_Choise;
 }
 
 
 
 
+
+
+
 void loop() {
+  
   client.loop();
-   unsigned long currentTime = millis();
+  
+  unsigned long currentTime = millis();
  
 
    
@@ -204,28 +258,14 @@ void loop() {
   button_Choise();
 
 
-lcd.setCursor(0,1);
-switch(programNumber)
-      {
-      
-      case 1:
-      lcd.clear();
-      lcd.print("Hjemme WIFI");
-      
-      break;
-
-      case 2:
-      lcd.clear();
-      lcd.print("Skole WIFI");
-      
-            
-      }
-
-   
 
   unsigned long timeWent=currentTime-lastUpdateTime;
   if (timeWent>=5000)
-  programNumber=programChoise;
+  {
+    programNumber=programChoise;
+    timeOut=true;
+  }
+  
   
   delay(50);
 
