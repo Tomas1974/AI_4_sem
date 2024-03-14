@@ -30,6 +30,8 @@ int gemtProgramNumber=0;
 int programChoise=0;
 bool timeOut=false;
 bool wifiON=false;
+String ssid1;
+
 
 
 //Variables screen
@@ -61,7 +63,7 @@ if (start)
 void wifiConnection(String ssid, String password)
 {
   int counter=0;
-    
+    ssid1=ssid;
 
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED && counter<10) 
@@ -74,9 +76,7 @@ void wifiConnection(String ssid, String password)
 if (counter==10)
 {
     
-   lcd.clear();
-   lcd.print("   Ingen WIFI");
-   Serial.println("Ingen forbindelse");
+     Serial.println("Ingen forbindelse");
    
    
 }
@@ -143,35 +143,59 @@ void button_Menu(long currentTime)
     if (buttonState_Menu == HIGH) {
       
         programNumber++;
-        lastUpdateTime = currentTime;
+        
         timeOut=false;
         WiFi.disconnect();
      
       if (programNumber==3)
       programNumber=1;
-            
+
+          valg(currentTime);  
     }
 
     delay(50); // Debounce delay
   }
 
   lastButtonState_Menu = buttonState_Menu;
-  valg();
+  
 
 }
 
 
-void valg()
+void valg(long currentTime)
 {
-  if (programNumber!=gemtProgramNumber) //For at skærmen ikke skal flimre ændres teksten så lidt så muligt.
+  //if (programNumber!=gemtProgramNumber) //For at skærmen ikke skal flimre ændres teksten så lidt så muligt.
   {
       
       lcd.clear();
 
+      Serial.println(ssid1);
+
       if (programNumber==1 )
-      lcd.print("  Hjemme WIFI");
+      {
+        
+        lcd.print("  Hjemme WIFI");
+
+        lcd.setCursor(0,1);
+        
+        if (wifiON && ssid1==hjemme_ssid )
+        lcd.print("-------ON-------");
+        else
+        lcd.print("------OFF-------");
+
+      }
+      
+
       else
-      lcd.print("   Skole WIFI");
+      {
+        lcd.print("   Skole WIFI");
+        lcd.setCursor(0,1);
+        if ( wifiON&& ssid1==skole_ssid)
+        lcd.print("-------ON-------");
+        else
+        lcd.print("------OFF-------");
+      }
+      
 
       if (timeOut && wifiON)
       {
@@ -182,6 +206,7 @@ void valg()
 
   }
    gemtProgramNumber=programNumber; 
+   lastUpdateTime = currentTime;
 
 }
 
@@ -262,8 +287,8 @@ void loop() {
   unsigned long timeWent=currentTime-lastUpdateTime;
   if (timeWent>=5000)
   {
-    programNumber=programChoise;
-    timeOut=true;
+     timeOut=true;
+     valg(currentTime);
   }
   
   
