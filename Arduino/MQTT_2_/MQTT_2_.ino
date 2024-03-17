@@ -45,7 +45,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
-WifiMenu wifiMenu( lcd, BUTTON_Menu, BUTTON_Choise);
+WifiMenu wifiMenu( lcd, hjemme_ssid, hjemme_password, skole_ssid, skole_password, BUTTON_Menu, BUTTON_Choise);
 
 
 

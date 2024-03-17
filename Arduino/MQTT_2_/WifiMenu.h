@@ -7,7 +7,7 @@
 
 class WifiMenu {
 public:
-     WifiMenu(LiquidCrystal_I2C lcd, int BUTTON_Menu, int BUTTON_Choise);
+     WifiMenu(LiquidCrystal_I2C lcd, const char* hjemme_ssid, const char* hjemme_password, const char* skole_ssid, const char* skole_password, int BUTTON_Menu, int BUTTON_Choise);
     void wifiConnection(String ssid, String password);
     void initialize();        // Initializes the LCD
     String getSsid1();
@@ -33,10 +33,10 @@ private:
     int lastButtonState_Choise;
     int programNumber;
     int programChoise;
-    char* hjemme_ssid;
-    char* hjemme_password;
-    char* skole_ssid; // Corrected line
-    char* skole_password;
+    const char* _hjemme_ssid;
+    const char* _hjemme_password;
+    const char* _skole_ssid;
+    const char* _skole_password;
     
         
 

@@ -3,7 +3,7 @@
 
 
 
-WifiMenu::WifiMenu( LiquidCrystal_I2C lcd, int BUTTON_Menu, int BUTTON_Choise)
+WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, const char* hjemme_ssid, const char* hjemme_password, const char* skole_ssid, const char* skole_password, int BUTTON_Menu, int BUTTON_Choise)
 : _BUTTON_Menu(BUTTON_Menu),
   _BUTTON_Choise(BUTTON_Choise),
   _lcd(lcd),
@@ -15,10 +15,10 @@ WifiMenu::WifiMenu( LiquidCrystal_I2C lcd, int BUTTON_Menu, int BUTTON_Choise)
   lastButtonState_Choise(0),
   programNumber(0),
   programChoise(0),
-  hjemme_ssid("Tomas"),
-  hjemme_password("Tomas1974"),
-  skole_ssid("POCO X3 Pro"),
-  skole_password("Tomas1974")
+  _hjemme_ssid(hjemme_ssid),
+  _hjemme_password(hjemme_password),
+  _skole_ssid(skole_ssid),
+  _skole_password(skole_password)
 
 { }
 
@@ -122,7 +122,7 @@ void WifiMenu::valg()
 
         _lcd.setCursor(0,1);
         
-        if (getwifiON() && getSsid1()==hjemme_ssid )
+        if (getwifiON() && getSsid1()==_hjemme_ssid )
         _lcd.print("-------ON-------");
         else
         _lcd.print("------OFF-------");
@@ -134,7 +134,7 @@ void WifiMenu::valg()
       {
         _lcd.print("   Skole WIFI");
         _lcd.setCursor(0,1);
-        if ( getwifiON() &&  getSsid1()==skole_ssid)
+        if ( getwifiON() &&  getSsid1()==_skole_ssid)
         _lcd.print("-------ON-------");
         else
         _lcd.print("------OFF-------");
@@ -164,9 +164,9 @@ void WifiMenu::button_Choise()
  
       if (programChoise==1)
       
-      wifiConnection(hjemme_ssid, hjemme_password);
+      wifiConnection(_hjemme_ssid, _hjemme_password);
       else
-      wifiConnection(skole_ssid, skole_password);
+      wifiConnection(_skole_ssid, _skole_password);
       
       valg();
             
