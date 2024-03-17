@@ -1,4 +1,4 @@
-#include <WiFi.h>
+
 #include <PubSubClient.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
@@ -22,7 +22,7 @@ int lcdColumns = 16;
 int lcdRows = 2;
 
 
-WifiMenu wifiMenu(0x27, lcdColumns, lcdRows, BUTTON_Menu, BUTTON_Choise);
+WifiMenu wifiMenu( BUTTON_Menu, BUTTON_Choise);
 
 
 
@@ -125,10 +125,7 @@ void setup() {
   wifiMenu.initialize();
 
   
-  
-  //pinMode(BUTTON_Menu, INPUT_PULLUP);
-  //pinMode(BUTTON_Choise, INPUT_PULLUP);
-  
+    
   
   pinMode(LED_GREEN, OUTPUT);
   DS18B20.begin();

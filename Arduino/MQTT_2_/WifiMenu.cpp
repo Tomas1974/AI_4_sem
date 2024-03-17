@@ -3,8 +3,8 @@
 
 
 
-WifiMenu::WifiMenu(uint8_t lcdAddr, int lcdCols, int lcdRows, int BUTTON_Menu, int BUTTON_Choise)
-: _lcd(lcdAddr, lcdCols, lcdRows), _BUTTON_Menu(BUTTON_Menu), _BUTTON_Choise(BUTTON_Choise)
+WifiMenu::WifiMenu( int BUTTON_Menu, int BUTTON_Choise)
+: _lcd(_lcdAddr, _lcdCols, _lcdRows), _BUTTON_Menu(BUTTON_Menu), _BUTTON_Choise(BUTTON_Choise), _lcdAddr(0x27), _lcdCols(16), _lcdRows(2)
 { }
 
 
