@@ -1,3 +1,4 @@
+#include <WiFi.h>
 
 #include <PubSubClient.h>
 #include <OneWire.h>
@@ -22,7 +23,7 @@ int lcdColumns = 16;
 int lcdRows = 2;
 
 
-WifiMenu wifiMenu( BUTTON_Menu, BUTTON_Choise);
+
 
 
 
@@ -32,24 +33,8 @@ float tempC; // temperature in Celsius
 //Translated from broker to start mesuring
 bool start=false;
 
-//Variables to buttons
-int buttonState_Menu = 0;
-int buttonState_Choise = 0;
-int lastButtonState_Menu = 0;
-int lastButtonState_Choise = 0;
-int programNumber=0;
-int programChoise=0;
-bool wifiON=false;
-
-String ssid1;
-
-
-
-
-
 
 bool mqttConnect=false;
-
 long lastUpdateTime;
 
 
@@ -58,8 +43,9 @@ OneWire oneWire(TEMP_SENSOR);
 DallasTemperature DS18B20(&oneWire);
 WiFiClient espClient;
 PubSubClient client(espClient);
-LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
 
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
+WifiMenu wifiMenu( lcd, BUTTON_Menu, BUTTON_Choise);
 
 
 
@@ -72,31 +58,6 @@ if (start)
   
 }
 
-void wifiConnection(String ssid, String password)
-{
-  int counter=0;
-    ssid1=ssid;
-
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED && counter<10) 
-  {
-    counter++;
-    delay(500);
-    
-  }
-  
-if (counter==10)
-   Serial.println("Ingen forbindelse");
-       
-
-else
-{
-  Serial.println("Connected to the WiFi network");
-    wifiON=true;
-  
-}
-
-}
 
 
 void mqttConnection()
@@ -123,116 +84,12 @@ void setup() {
   Serial.begin(9600);
 
   wifiMenu.initialize();
-
-  
-    
+    lcd.init();                    
+    lcd.backlight();
   
   pinMode(LED_GREEN, OUTPUT);
   DS18B20.begin();
 }
-
-
-
-void button_Menu()
-{
-    buttonState_Menu = digitalRead(BUTTON_Menu);
-    
-  if (buttonState_Menu != lastButtonState_Menu) {
-    
-
-    if (buttonState_Menu == HIGH) {
-      
-        programNumber++;
-        
-                     
-      if (programNumber==3)
-      programNumber=1;
-
-          valg();  
-    }
-
-    delay(50); // Debounce delay
-  }
-
-  lastButtonState_Menu = buttonState_Menu;
-  
-
-}
-
-
-void valg()
-{
-  
-  {
-     
-      lcd.clear();
-   Serial.println(ssid1);
-
-      if (programNumber==1 )
-      {
-        
-        lcd.print("  Hjemme WIFI");
-
-        lcd.setCursor(0,1);
-        
-        if (wifiON && ssid1==hjemme_ssid )
-        lcd.print("-------ON-------");
-        else
-        lcd.print("------OFF-------");
-
-      }
-      
-
-      else
-      {
-        lcd.print("   Skole WIFI");
-        lcd.setCursor(0,1);
-        if ( wifiON && ssid1==skole_ssid)
-        lcd.print("-------ON-------");
-        else
-        lcd.print("------OFF-------");
-      }
-      
-      
-  }
-
-}
-
-
-
-void button_Choise()
-{
- 
- buttonState_Choise = digitalRead(BUTTON_Choise);
-
-    if (buttonState_Choise != lastButtonState_Choise) 
-    if (buttonState_Choise == HIGH) 
-    {
-
-    programChoise=programNumber;      
-    wifiON=false;
-      
-
-      if (programChoise==1)
-      wifiConnection(hjemme_ssid, hjemme_password);
-      else
-      wifiConnection(skole_ssid, skole_password);
-      
-      valg();
-            
-    }
-     
-    lastButtonState_Choise = buttonState_Choise;
-
-}
-
-
-    void wifiMenuSystem()
-    {
-      button_Menu();
-      button_Choise();
-    }
-
 
 
 void loop() {
@@ -258,8 +115,8 @@ void loop() {
      sprintf(message, "%.1f", tempC);
 
 
-     lcd.clear();
-     lcd.print("Vis temp. "+ String(message));
+     //lcd.clear();
+     //lcd.print("Vis temp. "+ String(message));
     
     digitalWrite(LED_GREEN, HIGH);  // Update the LED
     
@@ -276,13 +133,13 @@ void loop() {
 
   digitalWrite(LED_GREEN, LOW);  // Update the LED
   
-    wifiMenuSystem();
+    wifiMenu.wifiMenuSystem();
 
 
-    if (wifiON==false)
+    if (wifiMenu.getwifiON()==false)
       mqttConnect==false; 
 
-    if (wifiON && mqttConnect==false)
+    if (wifiMenu.getwifiON() && mqttConnect==false)
     {
        mqttConnection();
        mqttConnect==true; 
