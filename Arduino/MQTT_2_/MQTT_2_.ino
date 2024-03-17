@@ -24,9 +24,6 @@ int lcdRows = 2;
 
 
 
-
-
-
 // Variables to temp censor
 float tempC; // temperature in Celsius
 
@@ -115,8 +112,8 @@ void loop() {
      sprintf(message, "%.1f", tempC);
 
 
-     //lcd.clear();
-     //lcd.print("Vis temp. "+ String(message));
+     lcd.clear();
+     lcd.print("Vis temp. "+ String(message));
     
     digitalWrite(LED_GREEN, HIGH);  // Update the LED
     
@@ -136,10 +133,10 @@ void loop() {
     wifiMenu.wifiMenuSystem();
 
 
-    if (wifiMenu.getwifiON()==false)
+    if (wifiMenu.getwifiON() !="")
       mqttConnect==false; 
 
-    if (wifiMenu.getwifiON() && mqttConnect==false)
+    if (wifiMenu.getwifiON() !="" && mqttConnect==false)
     {
        mqttConnection();
        mqttConnect==true; 

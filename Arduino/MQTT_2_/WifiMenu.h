@@ -11,7 +11,7 @@ public:
     void wifiConnection(String ssid, String password);
     void initialize();        // Initializes the LCD
     String getSsid1();
-    bool getwifiON();
+    String getwifiON();
     void wifiMenuSystem();
 
 private:
@@ -19,14 +19,12 @@ private:
     void button_Menu();
     void valg();
     void button_Choise();
-
+    void setWifiOn(String wifiON1);
 
     LiquidCrystal_I2C _lcd;   // LCD object
     int _BUTTON_Menu;
     int _BUTTON_Choise;
-    String ssid1;
-    bool wifiON=false;
-    
+    String wifiON;
     int buttonState_Menu;
     int buttonState_Choise;
     int lastButtonState_Menu;
@@ -37,6 +35,7 @@ private:
     const char* _hjemme_password;
     const char* _skole_ssid;
     const char* _skole_password;
+    
     
         
 

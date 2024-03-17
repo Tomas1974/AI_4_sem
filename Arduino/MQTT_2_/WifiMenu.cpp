@@ -7,8 +7,7 @@ WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, const char* hjemme_ssid, const char* h
 : _BUTTON_Menu(BUTTON_Menu),
   _BUTTON_Choise(BUTTON_Choise),
   _lcd(lcd),
-  ssid1(""), 
-  wifiON(false),
+  wifiON(""),
   buttonState_Menu(0),
   buttonState_Choise(0),
   lastButtonState_Menu(0),
@@ -39,8 +38,7 @@ void WifiMenu::initialize() {
 void WifiMenu::wifiConnection(String ssid, String password)
 {
   int counter=0;
-  ssid1=ssid;
-
+  
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED && counter<10) 
   {
@@ -56,27 +54,11 @@ if (counter==10)
 else
 {
   Serial.println("Connected to the WiFi network");
-    wifiON=true;
+  setWifiOn(ssid);
   
 }
 
-
-
 }
-
-
-String WifiMenu::getSsid1()
-{
-  return ssid1;
-}
-
-
-bool WifiMenu::getwifiON()
-{
-  return wifiON;
-}
-
-
 
 
 
@@ -90,7 +72,7 @@ void WifiMenu::button_Menu()
 
     if (buttonState_Menu == HIGH) {
       
-        programNumber++;
+        programNumber++; 
         
                      
       if (programNumber==3)
@@ -122,19 +104,18 @@ void WifiMenu::valg()
 
         _lcd.setCursor(0,1);
         
-        if (getwifiON() && getSsid1()==_hjemme_ssid )
+        if (getwifiON() ==_hjemme_ssid )
         _lcd.print("-------ON-------");
         else
         _lcd.print("------OFF-------");
 
       }
-      
 
       else
       {
         _lcd.print("   Skole WIFI");
         _lcd.setCursor(0,1);
-        if ( getwifiON() &&  getSsid1()==_skole_ssid)
+        if ( getwifiON() ==_skole_ssid)
         _lcd.print("-------ON-------");
         else
         _lcd.print("------OFF-------");
@@ -157,7 +138,8 @@ void WifiMenu::button_Choise()
     {
 
     programChoise=programNumber;      
-    wifiON=false;
+      setWifiOn("");
+    
     
       
 
@@ -177,7 +159,7 @@ void WifiMenu::button_Choise()
 }
 
 
-    void WifiMenu::wifiMenuSystem()
+    void WifiMenu::wifiMenuSystem() //Kalde metoden fra main
     {
       button_Menu();
       button_Choise();
@@ -186,5 +168,14 @@ void WifiMenu::button_Choise()
 
 
 
+String WifiMenu::getwifiON()
+{
+  return wifiON;
+}
+
+void WifiMenu::setWifiOn(String wifiON1)
+{
+  wifiON=wifiON1;
+}
 
 
