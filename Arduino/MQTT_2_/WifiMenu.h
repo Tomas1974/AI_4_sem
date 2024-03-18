@@ -30,7 +30,6 @@ private:
     int lastButtonState_Menu;
     int lastButtonState_Choise;
     int programNumber;
-    int programChoise;
     const char* _hjemme_ssid;
     const char* _hjemme_password;
     const char* _skole_ssid;

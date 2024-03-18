@@ -13,7 +13,6 @@ WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, const char* hjemme_ssid, const char* h
   lastButtonState_Menu(0),
   lastButtonState_Choise(0),
   programNumber(0),
-  programChoise(0),
   _hjemme_ssid(hjemme_ssid),
   _hjemme_password(hjemme_password),
   _skole_ssid(skole_ssid),
@@ -137,14 +136,11 @@ void WifiMenu::button_Choise()
     if (buttonState_Choise == HIGH) 
     {
 
-    programChoise=programNumber;      
+    
       setWifiOn("");
     
-    
-      
-
- 
-      if (programChoise==1)
+     
+      if (programNumber==1)
       
       wifiConnection(_hjemme_ssid, _hjemme_password);
       else
