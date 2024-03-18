@@ -48,12 +48,13 @@ LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
 
 WifiModel wifiNetworks[] = {
   WifiModel(hjemme_name, hjemme_ssid, hjemme_password),
-  WifiModel(skole_name, skole_ssid, skole_password)
+  WifiModel(skole_name, skole_ssid, skole_password),
+  WifiModel("ABC", "DEF", "GHI")
 
 };
 
 //WifiMenu wifiMenu(skærm variabel, netværks array, antal objekter i array, knap et input, knap to input);
-WifiMenu wifiMenu( lcd, wifiNetworks, 2, BUTTON_Menu, BUTTON_Choise);
+WifiMenu wifiMenu( lcd, wifiNetworks, 3, BUTTON_Menu, BUTTON_Choise);
 
 
 
