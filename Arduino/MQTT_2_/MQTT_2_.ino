@@ -11,9 +11,7 @@
 
 
 
-
 // Ports on ESP32
-
 const int LED_GREEN = 25;
 const int TEMP_SENSOR = 17;
 const int BUTTON_Menu = 16;
@@ -26,38 +24,41 @@ int lcdRows = 2;
 
 
 
-// Variables to temp censor
+// Variabler til temperatursensor
 float tempC; // temperature in Celsius
+long lastUpdateTime; //Bruges til tidsmåling til temperaturer
 
-//Translated from broker to start mesuring
+
+//Starter temperatursensoren, hvis den er sand.
 bool start=false;
 
 
-bool mqttConnect=false;
-long lastUpdateTime;
 
 
 //Hardware and connections varibles
 OneWire oneWire(TEMP_SENSOR);
 DallasTemperature DS18B20(&oneWire);
+
+//Pubsub til brokeren
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+//Skærm
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
 
 
+//Objekter med passwords til WifiMenu
 WifiModel wifiNetworks[] = {
-  WifiModel(hjemme_name, hjemme_ssid, hjemme_password),
+  WifiModel(hjemme_name, hjemme_ssid, hjemme_password), //Strings fra passwords.h
   WifiModel(skole_name, skole_ssid, skole_password),
-  WifiModel("ABC", "DEF", "GHI")
-
+    
 };
 
-//WifiMenu wifiMenu(skærm variabel, netværks array, antal objekter i array, knap et input, knap to input);
-WifiMenu wifiMenu( lcd, wifiNetworks, 3, BUTTON_Menu, BUTTON_Choise);
+//WifiMenu wifiMenu(skærm variabel, netværks array, antal objekter i array, knap et bladre i menu, knap to vælge i menuen);
+WifiMenu wifiMenu( lcd, wifiNetworks, 2, BUTTON_Menu, BUTTON_Choise);
 
 
-
+//Broker signal fra c# om at starte temperatursensoren
 void callback(char* topic, byte* payload, unsigned int length) {
   
 if (start)
@@ -72,7 +73,8 @@ if (start)
 void mqttConnection()
 {
    client.setServer(mqttServer, mqttPort);
-  while (!client.connected()) {
+  while (!client.connected()) //Metoden springes over, hvis der er forbindelse i forvejen.
+  {
     Serial.println("Connecting to MQTT...");
     if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
       Serial.println("connected");
@@ -97,7 +99,7 @@ void setup() {
     lcd.backlight();
   
   pinMode(LED_GREEN, OUTPUT);
-  DS18B20.begin();
+  DS18B20.begin(); //En del af Dallas temperatur beregneren.
 }
 
 
@@ -133,31 +135,24 @@ void loop() {
     
     lastUpdateTime=currentTime;
     }
-       delay(50);
+       
       
 
     }
     else
  {
 
-  digitalWrite(LED_GREEN, LOW);  // Update the LED
+  digitalWrite(LED_GREEN, LOW);  // Slukker led, når der ikke er forbindelse
   
     wifiMenu.wifiMenuSystem();
 
-
-    if (wifiMenu.getwifiON() !="")
-      mqttConnect==false; 
-
-    if (wifiMenu.getwifiON() !="" && mqttConnect==false)
-    {
-       mqttConnection();
-       mqttConnect==true; 
-    }
-     
   
-  delay(50);
+    
+    if (wifiMenu.getwifiON() !="") //Den skal ikke forbinde, hvis der ikke er internet.
+       mqttConnection(); 
+    
 
  }
- 
+ delay(50);
   
 }
