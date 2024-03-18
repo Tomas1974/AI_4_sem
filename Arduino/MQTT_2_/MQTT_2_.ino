@@ -6,6 +6,8 @@
 #include "passwords.h"  // Your WiFi and MQTT credentials
 #include <LiquidCrystal_I2C.h>
 #include "WifiMenu.h"
+#include "WifiModel.h"
+
 
 
 
@@ -42,7 +44,16 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
-WifiMenu wifiMenu( lcd, hjemme_ssid, hjemme_password, skole_ssid, skole_password, BUTTON_Menu, BUTTON_Choise);
+
+
+WifiModel wifiNetworks[] = {
+  WifiModel(hjemme_name, hjemme_ssid, hjemme_password),
+  WifiModel(skole_name, skole_ssid, skole_password)
+
+};
+
+//WifiMenu wifiMenu(skærm variabel, netværks array, antal objekter i array, knap et input, knap to input);
+WifiMenu wifiMenu( lcd, wifiNetworks, 2, BUTTON_Menu, BUTTON_Choise);
 
 
 

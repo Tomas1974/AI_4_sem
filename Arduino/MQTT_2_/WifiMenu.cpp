@@ -3,28 +3,27 @@
 
 
 
-WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, const char* hjemme_ssid, const char* hjemme_password, const char* skole_ssid, const char* skole_password, int BUTTON_Menu, int BUTTON_Choise)
-: _BUTTON_Menu(BUTTON_Menu),
-  _BUTTON_Choise(BUTTON_Choise),
-  _lcd(lcd),
-  wifiON(""),
-  buttonState_Menu(0),
-  buttonState_Choise(0),
-  lastButtonState_Menu(0),
-  lastButtonState_Choise(0),
-  programNumber(0),
-  _hjemme_ssid(hjemme_ssid),
-  _hjemme_password(hjemme_password),
-  _skole_ssid(skole_ssid),
-  _skole_password(skole_password)
+WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, WifiModel wifiNetworks[], int arraySize, int BUTTON_Menu, int BUTTON_Choise)
+: _lcd(lcd),
+ _BUTTON_Menu(BUTTON_Menu),
+ _BUTTON_Choise(BUTTON_Choise),
+ buttonState_Menu(0),
+ buttonState_Choise(0),
+ lastButtonState_Menu(0),
+ lastButtonState_Choise(0),
+ wifiON(""), 
+ programNumber(-1),
+ _arraySize(arraySize)
+{
+    _wifiNetworks = wifiNetworks; // Set the pointer to the passed array
+}
 
-{ }
 
 
 void WifiMenu::initialize() {
   
-   _lcd.init();                    
-   _lcd.backlight();
+  _lcd.init();                    
+  _lcd.backlight();
   pinMode(_BUTTON_Menu, INPUT_PULLUP);
   pinMode(_BUTTON_Choise, INPUT_PULLUP);
   
@@ -37,6 +36,7 @@ void WifiMenu::initialize() {
 void WifiMenu::wifiConnection(String ssid, String password)
 {
   int counter=0;
+  
   
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED && counter<10) 
@@ -70,14 +70,16 @@ void WifiMenu::button_Menu()
     
 
     if (buttonState_Menu == HIGH) {
-      
-        programNumber++; 
-        
-                     
-      if (programNumber==3)
-      programNumber=1;
+            
+
+        programNumber++;
+
+      if (programNumber==_arraySize)
+      programNumber=0;
 
           valg();  
+
+       
     }
 
     delay(50); // Debounce delay
@@ -92,36 +94,17 @@ void WifiMenu::button_Menu()
 void WifiMenu::valg()
 {
   
-  {
-     
+       
       _lcd.clear();
-   
-      if (programNumber==1 )
-      {
+      _lcd.print(_wifiNetworks[programNumber].getNetworkName());
+
+      _lcd.setCursor(0,1);
         
-        _lcd.print("  Hjemme WIFI");
-
-        _lcd.setCursor(0,1);
-        
-        if (getwifiON() ==_hjemme_ssid )
-        _lcd.print("-------ON-------");
-        else
-        _lcd.print("------OFF-------");
-
-      }
-
+      if (getwifiON() == _wifiNetworks[programNumber].getSSID() )
+       _lcd.print("-------ON-------");
       else
-      {
-        _lcd.print("   Skole WIFI");
-        _lcd.setCursor(0,1);
-        if ( getwifiON() ==_skole_ssid)
-        _lcd.print("-------ON-------");
-        else
-        _lcd.print("------OFF-------");
-      }
-      
-      
-  }
+       _lcd.print("------OFF-------");
+
 
 }
 
@@ -136,18 +119,10 @@ void WifiMenu::button_Choise()
     if (buttonState_Choise == HIGH) 
     {
 
-    
-      setWifiOn("");
-    
-     
-      if (programNumber==1)
-      
-      wifiConnection(_hjemme_ssid, _hjemme_password);
-      else
-      wifiConnection(_skole_ssid, _skole_password);
-      
-      valg();
-            
+       setWifiOn("");
+       wifiConnection(_wifiNetworks[programNumber].getSSID(), _wifiNetworks[programNumber].getPassword());
+       valg();
+             
     }
      
     lastButtonState_Choise = buttonState_Choise;
