@@ -9,14 +9,13 @@
 class WifiMenu {
 public:
     WifiMenu(LiquidCrystal_I2C lcd, WifiModel wifiNetworks[], int arraySize, int BUTTON_Menu, int BUTTON_Choise);
-    void wifiConnection(String ssid, String password);
     void initialize();        // Initializes the LCD
-    String getSsid1();
     String getwifiON();
     void wifiMenuSystem();
 
 private:
 
+    String wifiConnection(String ssid, String password);
     void button_Menu();
     void valg();
     void button_Choise();

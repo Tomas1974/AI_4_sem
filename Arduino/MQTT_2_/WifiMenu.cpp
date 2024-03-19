@@ -33,10 +33,9 @@ void WifiMenu::initialize() {
 
 
 
-void WifiMenu::wifiConnection(String ssid, String password)
+String WifiMenu::wifiConnection(String ssid, String password)
 {
   int counter=0;
-  
   
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED && counter<10) 
@@ -47,15 +46,17 @@ void WifiMenu::wifiConnection(String ssid, String password)
   }
   
 if (counter==10)
-   Serial.println("Ingen forbindelse");
-       
-
-else
 {
-  Serial.println("Connected to the WiFi network");
-  setWifiOn(ssid);
-  
+   Serial.println("Ingen forbindelse");
+   ssid="";
+       
 }
+else
+
+  Serial.println("Connected to the WiFi network");
+ 
+
+return ssid;
 
 }
 
@@ -81,8 +82,7 @@ void WifiMenu::button_Menu()
 
        
     }
-
-    delay(50); // Debounce delay
+    
   }
 
   lastButtonState_Menu = buttonState_Menu;
@@ -118,9 +118,8 @@ void WifiMenu::button_Choise()
     if (buttonState_Choise != lastButtonState_Choise) 
     if (buttonState_Choise == HIGH) 
     {
-
-       setWifiOn("");
-       wifiConnection(_wifiNetworks[programNumber].getSSID(), _wifiNetworks[programNumber].getPassword());
+             //Her placeres en String i wificonnection. Det sker ved at kalde wificonnection. (Den etablere wifi og sender navnet på opkoblingen retur). Hvis der ikke var netværk er opkoblingen "" tom. 
+       setWifiOn(wifiConnection(_wifiNetworks[programNumber].getSSID(), _wifiNetworks[programNumber].getPassword()));
        valg();
              
     }
