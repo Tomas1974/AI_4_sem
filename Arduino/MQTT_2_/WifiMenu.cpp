@@ -3,7 +3,7 @@
 
 
 
-WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, WifiModel wifiNetworks[], int arraySize, int BUTTON_Menu, int BUTTON_Choise)
+WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, std::vector<WifiModel> wifiNetworks , int BUTTON_Menu, int BUTTON_Choise)
 : _lcd(lcd),
  _BUTTON_Menu(BUTTON_Menu),
  _BUTTON_Choise(BUTTON_Choise),
@@ -12,10 +12,10 @@ WifiMenu::WifiMenu(LiquidCrystal_I2C lcd, WifiModel wifiNetworks[], int arraySiz
  lastButtonState_Menu(0),
  lastButtonState_Choise(0),
  wifiON(""), 
- programNumber(-1),
- _arraySize(arraySize)
+ programNumber(-1)
+
 {
-    _wifiNetworks = wifiNetworks; // Set the pointer to the passed array
+    _wifiNetworks = wifiNetworks; 
 }
 
 
@@ -75,7 +75,7 @@ void WifiMenu::button_Menu()
 
         programNumber++;
 
-      if (programNumber==_arraySize)
+      if (programNumber==_wifiNetworks.size())
       programNumber=0;
 
           valg();  

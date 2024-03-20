@@ -17,6 +17,7 @@ class WifiModel {
     String getNetworkName(); // Method to get the network name
     String getSSID(); // Method to get the SSID
     String getPassword(); // Method to get the password
+    
 };
 
 #endif

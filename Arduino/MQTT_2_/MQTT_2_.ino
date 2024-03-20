@@ -7,7 +7,7 @@
 #include <LiquidCrystal_I2C.h>
 #include "WifiMenu.h"
 #include "WifiModel.h"
-
+#include <vector> 
 
 
 
@@ -48,14 +48,14 @@ LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);
 
 
 //Objekter med passwords til WifiMenu
-WifiModel wifiNetworks[] = {
+std::vector<WifiModel> wifiNetworks = {
   WifiModel(hjemme_name, hjemme_ssid, hjemme_password), //Strings fra passwords.h
   WifiModel(skole_name, skole_ssid, skole_password),
     
 };
 
 //WifiMenu wifiMenu(skærm variabel, netværks array, antal objekter i array, knap et bladre i menu, knap to vælge i menuen);
-WifiMenu wifiMenu( lcd, wifiNetworks, 2, BUTTON_Menu, BUTTON_Choise);
+WifiMenu wifiMenu( lcd, wifiNetworks, BUTTON_Menu, BUTTON_Choise);
 
 
 //Broker signal fra c# om at starte temperatursensoren

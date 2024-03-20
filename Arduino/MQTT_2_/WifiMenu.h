@@ -5,10 +5,12 @@
 #include <LiquidCrystal_I2C.h>
 #include <WiFi.h>
 #include "WifiModel.h"
+#include <vector>
+
 
 class WifiMenu {
 public:
-    WifiMenu(LiquidCrystal_I2C lcd, WifiModel wifiNetworks[], int arraySize, int BUTTON_Menu, int BUTTON_Choise);
+    WifiMenu(LiquidCrystal_I2C lcd, std::vector<WifiModel> wifiNetworks, int BUTTON_Menu, int BUTTON_Choise);
     void initialize();        // Initializes the LCD
     String getwifiON();
     void wifiMenuSystem();
@@ -20,6 +22,7 @@ private:
     void valg();
     void button_Choise();
     void setWifiOn(String wifiON1);
+    
 
     LiquidCrystal_I2C _lcd;  // LCD object
     int _BUTTON_Menu;
@@ -30,8 +33,8 @@ private:
     int lastButtonState_Menu;
     int lastButtonState_Choise;
     int programNumber;
-     WifiModel *_wifiNetworks;
-    int _arraySize;
+    std::vector<WifiModel> _wifiNetworks ;
+    
             
 
 };
