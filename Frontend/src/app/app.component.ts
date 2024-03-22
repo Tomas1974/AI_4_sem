@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {DataService} from "./Data.service";
 import {LegendPosition} from "@swimlane/ngx-charts";
 import {UtilitiesService} from "./utilities.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -130,7 +131,9 @@ export class AppComponent {
 
 
 
-  constructor(public dataService: DataService, public utilitiesService: UtilitiesService ) {
+  constructor(public dataService: DataService,
+              public utilitiesService: UtilitiesService,
+              private router: Router) {
 
     }
 
@@ -157,6 +160,7 @@ export class AppComponent {
     if (confirm) {
       this.dataService.nulstil();
       this.dataService.graphName="";
+      this.router.navigate(['/root']);
     }
   }
 
