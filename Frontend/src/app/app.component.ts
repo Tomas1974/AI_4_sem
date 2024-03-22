@@ -8,13 +8,14 @@ import {Router} from "@angular/router";
   selector: 'app-root',
   template: `
 
+
     <ion-content scrollY="true">
 
       <ion-col>
         <ion-row>
           <img style=" width: 2%; height: auto;" src="../assets/Temp_image.jpg">
 
-          <H1 style="margin-left: 20px;">AI temperature</H1>
+          <H1 style="margin-left: 20px;">Temperaturer</H1>
         </ion-row>
       </ion-col>
 
@@ -29,7 +30,7 @@ import {Router} from "@angular/router";
             <ion-card >
             <ion-row>
               <ion-col>
-              <ion-button  (click)="nameGraph()">Name</ion-button>
+              <ion-button  (click)="nameGraph()">Navn</ion-button>
 
                 <ion-button style=".grey {
                   --ion-color-base: grey !important;
@@ -42,13 +43,13 @@ import {Router} from "@angular/router";
                   --ion-color-base: grey !important;
                     --ion-color-base-rgb: 128,128,128 !important;
 }
-" [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="saveGraph()">Save</ion-button>
+" [disabled]="dataService.graphName === ''|| dataService.start===true" [class.grey]="dataService.graphName === '' || dataService.start===true" (click)="saveGraph()">Gem</ion-button>
 
                 <ion-button style=".grey {
                   --ion-color-base: grey !important;
                     --ion-color-base-rgb: 128,128,128 !important;
 }
-                " [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="nulstil()">Nulstil</ion-button>
+                " [disabled]="dataService.graphName === '' || dataService.start===true" [class.grey]="dataService.graphName === '' || dataService.start===true" (click)="nulstil()">Nulstil</ion-button>
 
               </ion-col>
                 <ion-col >
@@ -75,6 +76,7 @@ import {Router} from "@angular/router";
                 [yAxisLabel]="yAxisLabel"
                 [timeline]="timeline"
                 [results]="this.dataService.temperatureData"
+                [autoScale]="true"
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)"
@@ -94,15 +96,12 @@ import {Router} from "@angular/router";
               <p>Antal målinger {{ dataService.temperatureData.length }}</p>
             </ion-row>
 
-
-
-
-
             </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
+
   `,
 
 })
@@ -113,8 +112,8 @@ export class AppComponent {
 
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Sec';
-  yAxisLabel = 'Temperatures';
+  xAxisLabel = 'Sek';
+  yAxisLabel = 'Temperatur';
   showYAxisLabel = true;
   xAxis: boolean = true;
   yAxis: boolean = true;
@@ -133,7 +132,7 @@ export class AppComponent {
 
   constructor(public dataService: DataService,
               public utilitiesService: UtilitiesService,
-              private router: Router) {
+              ) {
 
     }
 
@@ -160,7 +159,7 @@ export class AppComponent {
     if (confirm) {
       this.dataService.nulstil();
       this.dataService.graphName="";
-      this.router.navigate(['/root']);
+      window.location.reload();
     }
   }
 

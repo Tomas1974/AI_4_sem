@@ -11,6 +11,7 @@ export class DataService {
 
   secCounter:number=0;
   temperatureData: temperaturModel[]=[];
+  start: boolean=false;
 
   ws: WebSocket = new WebSocket("ws://localhost:8181")
   graphName: string="";
@@ -53,6 +54,11 @@ export class DataService {
 
   startStop()
   {
+    if (this.start)
+      this.start=false;
+    else
+      this.start=true;
+
     var object = {
       eventType: "StartStop",
       start_stop: "Start"

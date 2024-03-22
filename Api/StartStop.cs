@@ -10,16 +10,19 @@ namespace ws;
 
 public class StartStop : BaseEventHandler<StartStopDto>
 {
-   
+
+    public readonly MQTT _mqtt;
+
+    public StartStop(MQTT mqtt)
+    {
+        _mqtt = mqtt;
+    }
     
     
     public override Task Handle(StartStopDto dto, IWebSocketConnection socket)
     {
-
-
-        MQTT mqtt = new MQTT();
-            
-        mqtt.sendMessageToBroker();
+    
+        _mqtt.sendMessageToBroker();
         
         return Task.CompletedTask;
     }
