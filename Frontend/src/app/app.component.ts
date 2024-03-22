@@ -30,27 +30,29 @@ import {Router} from "@angular/router";
             <ion-card >
             <ion-row>
               <ion-col>
-              <ion-button  (click)="nameGraph()">Navn</ion-button>
+                <ion-row>
 
+                <ion-button  (click)="nameGraph()">Navn</ion-button>
                 <ion-button style=".grey {
                   --ion-color-base: grey !important;
                     --ion-color-base-rgb: 128,128,128 !important;
 }
 " [disabled]="dataService.graphName === ''" [class.grey]="dataService.graphName === ''" (click)="start_stop()">Start/Stop</ion-button>
 
-
                 <ion-button style=".grey {
                   --ion-color-base: grey !important;
                     --ion-color-base-rgb: 128,128,128 !important;
 }
 " [disabled]="dataService.graphName === ''|| dataService.start===true" [class.grey]="dataService.graphName === '' || dataService.start===true" (click)="saveGraph()">Gem</ion-button>
-
                 <ion-button style=".grey {
                   --ion-color-base: grey !important;
                     --ion-color-base-rgb: 128,128,128 !important;
 }
                 " [disabled]="dataService.graphName === '' || dataService.start===true" [class.grey]="dataService.graphName === '' || dataService.start===true" (click)="nulstil()">Nulstil</ion-button>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div class="indicator" [class.on]="dataService.start"></div>
 
+                </ion-row>
               </ion-col>
                 <ion-col >
                   <h1>{{this.dataService.graphName}}</h1>
@@ -103,6 +105,8 @@ import {Router} from "@angular/router";
     </ion-content>
 
   `,
+
+  styleUrls: ['app.component.scss'],
 
 })
 export class AppComponent {

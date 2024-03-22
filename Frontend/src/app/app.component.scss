@@ -1,0 +1,12 @@
+.indicator {
+  width: 30px;
+  height: 30px;
+  background-color: red;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  transition: background-color 0.5s;
+}
+
+.indicator.on {
+  background-color: green; /* Light on */
+}
