@@ -11,8 +11,7 @@ using Websocket;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<DataService>();
-DataService dataservice = new DataService();
-dataservice.GemteFarver();
+builder.Services.AddSingleton<MQTT>();
 
 
 

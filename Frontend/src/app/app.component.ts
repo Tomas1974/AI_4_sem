@@ -74,6 +74,7 @@ import {UtilitiesService} from "./utilities.service";
                 [yAxisLabel]="yAxisLabel"
                 [timeline]="timeline"
                 [results]="this.dataService.temperatureData"
+                [autoScale]="true"
                 (select)="onSelect($event)"
                 (activate)="onActivate($event)"
                 (deactivate)="onDeactivate($event)"
@@ -118,6 +119,7 @@ export class AppComponent {
   xAxis: boolean = true;
   yAxis: boolean = true;
   timeline: boolean = true;
+
 
 
 

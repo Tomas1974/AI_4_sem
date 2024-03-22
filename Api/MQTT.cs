@@ -10,7 +10,7 @@
 
 public class MQTT ()
 {
-    public static IMqttClient? mqttClient;
+    public  static IMqttClient? mqttClient;
     public static IMqttClientOptions? options;
     
     public async void Startup()
